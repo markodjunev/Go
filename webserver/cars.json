@@ -1,0 +1,26 @@
+[
+    {
+        "id": "1",
+        "make": "VW",
+        "model": "Passat",
+        "year": 2020
+    },
+    {
+        "id": "2",
+        "make": "BMW",
+        "model": "M5",
+        "year": 2019
+    },
+    {
+        "id": "3",
+        "make": "Peugeot",
+        "model": "206",
+        "year": 2020
+    },
+    {
+        "id": "4",
+        "make": "BMW",
+        "model": "M3",
+        "year": 2019
+    }
+]

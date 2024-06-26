@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"sync"
 )
@@ -22,16 +24,48 @@ var (
 )
 
 func main() {
+	err := loadCarsFromJSON("cars.json")
+	if err != nil {
+		fmt.Println("Error loading cars from JSON:", err);
+		return;
+	}
+
+	if len(cars) > 0 {
+		lastID, _ := strconv.Atoi(cars[len(cars)-1].ID);
+		id = lastID + 1;
+	}
+
 	mux := http.NewServeMux();
 
 	mux.HandleFunc("/cars", handleCars)       // POST, GET all
 	mux.HandleFunc("/cars/", handleCarByID)  // GET, PUT, DELETE by ID
 
 	fmt.Println("Starting server at port 8080");
-	err := http.ListenAndServe(":8080", mux)
+
+	err = http.ListenAndServe(":8080", mux);
 	if err != nil {
 		fmt.Println("Error starting server: ", err);
 	}
+}
+
+func loadCarsFromJSON(filename string) error {
+	file, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(bytes, &cars)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func handleCars(w http.ResponseWriter, r *http.Request) {
